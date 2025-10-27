@@ -1,7 +1,9 @@
 # fruitZYS1
 HackathonZYS
+
 分工：
 团队小组按照自己的想法先分别实现相关功能，最终将每个人实现比较好的地方进行融合
+
 俞孙杰：
 水果从屏幕顶部下落
 开始游戏的画面一个背景图，然后开始玩的时候换一个背景
@@ -11,10 +13,12 @@ HackathonZYS
 水果划过烂掉的特效
 游戏配乐
 游戏图片素材准备
+
 沈元强：
 分数统计功能实现，连击得分系统（1分→3分→6分→10分）
 水果从下往上抛出特效
 游戏图片素材准备
+
 周叶苓：
 水果从上任意角度抛出
 炸弹随机出现，运行轨迹不一致，中间会停顿3秒，速度不一样
@@ -26,6 +30,7 @@ HackathonZYS
 游戏图片素材准备
 
 游戏地址：https://x.qiniu.com/project/wx_user_DRrxU7dM/zys
+
 视频地址：https://www.bilibili.com/video/BV1hjszzGEKY/?vd_source=5412d8e69ef719839450d5ddbd65db34
 
 操作说明
