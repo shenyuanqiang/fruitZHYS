@@ -1,0 +1,23 @@
+onStart => {
+	hide
+}
+
+onMsg (msg, data) => {
+	if msg == "sliceBanana" {
+		pos := data.([]float64)
+		x := pos[0]
+		y := pos[1]
+
+		setXYpos x, y
+		setSize 0.3
+		show
+
+		// 原地缓慢放大并淡出的效果
+		repeat 10, => {
+			changeSize 0.005
+			wait 0.05
+		}
+	}
+
+	hide
+}

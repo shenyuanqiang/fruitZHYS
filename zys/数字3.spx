@@ -1,0 +1,40 @@
+onStart => {
+	setRotationStyle None
+	setHeading Up
+	hide
+}
+
+onMsg (msg, data) => {
+	if msg == "showScore" {
+		scoreData := data.([]float64)
+		x := scoreData[0]
+		y := scoreData[1]
+		scoreNum := int(scoreData[2])
+
+		if scoreNum == 3 {
+			setHeading Up
+			setRotationStyle None
+			setXYpos x, y
+			setSize 0.3
+			show
+
+			// 先稍微放大
+			// 先稍微放大
+			repeat 3, => {
+				changeSize 0.02
+				changeYpos 3
+			}
+
+			// 再缩小并上飘
+			repeat 8, => {
+				changeSize -0.02
+				changeYpos 4
+			}
+
+			hide
+
+			setSize 0.5
+			hide
+		}
+	}
+}

@@ -1,0 +1,11 @@
+onStart => {
+	show
+	setXYpos 165, 5
+	setSize 0.18
+}
+
+onClick => {
+	play "开始游戏2"
+	hide
+	broadcast "gameStart"
+}

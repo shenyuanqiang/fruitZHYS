@@ -1,0 +1,67 @@
+var (
+	sliced bool
+)
+
+onStart => {
+	hide
+}
+
+onMsg "gameStart", => {
+	forever => {
+		wait rand(3.0, 6.0)
+		clone
+	}
+}
+
+onCloned => {
+	if gameOver {
+		die
+		return
+	}
+	sliced = false
+
+	// 从舞台底部随机位置开始
+	startX := rand(-200.0, 200.0)
+	setYpos -200
+	setXpos startX
+
+	// 随机目标高度（从 -50 到 100）
+	targetY := rand(-50.0, 100.0)
+
+	// 计算上升时间（根据高度差）
+	distance := targetY - (-200)
+	upTime := distance / 150.0 // 上升速度约 150 像素/秒
+
+	show
+
+	// 向上飞到目标高度
+	glide startX, targetY, upTime
+
+	// 到达最高点后，自由下落
+	fallTime := (targetY - (-200)) / 100.0 // 下落速度约 100 像素/秒
+	glide startX, -200, fallTime
+
+	die
+}
+
+onCloned => {
+	forever => {
+		if gameOver {
+			die
+			return
+		}
+		if !sliced && mouseMoving {
+			dx := mouseX - xpos
+			dy := mouseY - ypos
+			if dx*dx+dy*dy < 2000 {
+				sliced = true
+				broadcast "showKnife", [xpos, ypos]
+				broadcast "hit", [xpos, ypos]
+				broadcast "sliceBanana", [xpos, ypos]
+				hide
+				die
+			}
+		}
+		wait 0.01
+	}
+}

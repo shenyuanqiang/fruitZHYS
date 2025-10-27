@@ -1,0 +1,9 @@
+onStart => {
+	hide
+}
+
+onMsg "gameOver", => {
+	show
+	setXYpos 0, 0
+	setSize 0.3
+}

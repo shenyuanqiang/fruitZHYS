@@ -1,0 +1,23 @@
+onStart => {
+	hide
+}
+
+onMsg (msg, data) => {
+	if msg == "bombExplode" {
+		pos := data.([]float64)
+		x := pos[0]
+		y := pos[1]
+
+		setXYpos x, y
+		setSize 0.18
+		show
+
+		// 爆炸效果：快速放大
+		repeat 8, => {
+			changeSize 0.15
+			wait 0.05
+		}
+
+		hide
+	}
+}
