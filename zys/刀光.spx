@@ -1,0 +1,35 @@
+var (
+	lastX float64
+	lastY float64
+)
+
+onStart => {
+	hide
+	lastX = 0
+	lastY = 0
+}
+
+onMsg (msg, data) => {
+	if msg == "showKnife" {
+		pos := data.([]float64)
+		x := pos[0]
+		y := pos[1]
+
+		setXYpos x, y
+		show
+
+		// 计算刀光方向
+		dx := x - lastX
+		dy := y - lastY
+
+		if dx != 0 || dy != 0 {
+			turnTo x+dx, y+dy
+		}
+
+		lastX = x
+		lastY = y
+
+		wait 0.15
+		hide
+	}
+}

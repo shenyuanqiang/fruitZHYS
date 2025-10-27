@@ -1,0 +1,68 @@
+var (
+	sliced bool
+)
+
+onStart => {
+	hide
+}
+
+onMsg "gameStart", => {
+	forever => {
+		wait rand(3.0, 4.0)
+		clone
+	}
+}
+
+onCloned => {
+	if gameOver {
+		die
+		return
+	}
+	sliced = false
+	setYpos 180
+	setXpos rand(-200, 200)
+	show
+
+	forever => {
+		if gameOver {
+			die
+			return
+		}
+		if !sliced && !gameOver && mouseMoving {
+			dx := mouseX - xpos
+			dy := mouseY - ypos
+			if dx*dx+dy*dy < 2000 {
+				sliced = true
+
+				// 广播炸弹爆炸消息
+				broadcast "bombExplode", [xpos, ypos]
+
+				// 播放爆炸音效
+				play "炸弹"
+
+				gameOver = true
+				broadcast "gameOver"
+				hide
+				die
+			}
+		}
+	}
+}
+
+onCloned => {
+	// 随机选择停顿位置（游戏界面任意位置）
+	randomX := rand(-200, 200)
+	randomY := rand(-100, 50)
+
+	// 从初始位置滑行到随机停顿位置
+	glide randomX, randomY, 3
+
+	// 停顿2秒
+	wait 2
+
+	// 继续掉落到底部
+	glide randomX, -180, 3
+
+	// 到达底部后立即消失
+	die
+}

@@ -1,0 +1,65 @@
+var (
+	sliced bool
+)
+
+onStart => {
+	hide
+}
+
+onMsg "gameStart", => {
+	forever => {
+		wait rand(3.0, 6.0)
+		clone
+	}
+}
+
+onCloned => {
+	if gameOver {
+		die
+		return
+	}
+	sliced = false
+
+	// 从舞台顶部随机位置开始
+	setYpos 200
+	setXpos rand(-200, 200)
+
+	// 设置物理模式和初始速度
+	setPhysicsMode DynamicPhysics
+	setGravity 1.5
+
+	// 给一个向上的初始速度，模拟抛出效果
+	// vx: 水平速度（随机，可能向左或向右）
+	// vy: 垂直速度（向上，负数表示向上）
+	vx := rand(-50.0, 50.0)
+	vy := rand(-200.0, -300.0)
+	setVelocity vx, vy
+
+	show
+
+	// 等待掉出屏幕
+	waitUntil ypos < -200
+	die
+}
+
+onCloned => {
+	forever => {
+		if gameOver {
+			die
+			return
+		}
+		if !sliced && mouseMoving {
+			dx := mouseX - xpos
+			dy := mouseY - ypos
+			if dx*dx+dy*dy < 2000 {
+				sliced = true
+				broadcast "showKnife", [xpos, ypos]
+				broadcast "hit", [xpos, ypos]
+				broadcast "sliceOrange", [xpos, ypos]
+				hide
+				die
+			}
+		}
+		wait 0.01
+	}
+}

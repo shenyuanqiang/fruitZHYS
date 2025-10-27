@@ -1,0 +1,138 @@
+var (
+	score        int
+	gameOver     bool
+	gameStarted  bool
+	slicedFruits int
+	lastHitTime  float64
+	lastSliceX   float64
+	lastSliceY   float64
+	mouseMoving  bool
+	lastMouseX   float64
+	lastMouseY   float64
+)
+
+onStart => {
+	score = 0
+	gameOver = false
+	gameStarted = false
+	slicedFruits = 0
+	lastHitTime = -1
+	lastSliceX = 0
+	lastSliceY = 0
+	mouseMoving = false
+	lastMouseX = mouseX
+	lastMouseY = mouseY
+
+	// 设置初始背景为"背景图2"
+	setBackdrop "背景图2"
+
+	// 游戏一开始就播放背景音乐
+	play "开始游戏2", true
+
+	scoreMonitor := getWidget(Monitor, "monitor")
+	scoreMonitor.show
+	scoreMonitor.setXYpos -210, 170
+
+	// 检测鼠标移动
+	forever => {
+		currentMouseX := mouseX
+		currentMouseY := mouseY
+		dx := currentMouseX - lastMouseX
+		dy := currentMouseY - lastMouseY
+
+		// 如果鼠标移动距离超过3像素，认为鼠标在移动
+		if dx*dx+dy*dy > 9 {
+			mouseMoving = true
+			lastMouseX = currentMouseX
+			lastMouseY = currentMouseY
+		} else {
+			// 鼠标停止移动后，等待0.1秒再设置为false
+			wait 0.1
+			currentMouseX2 := mouseX
+			currentMouseY2 := mouseY
+			dx2 := currentMouseX2 - lastMouseX
+			dy2 := currentMouseY2 - lastMouseY
+			if dx2*dx2+dy2*dy2 <= 9 {
+				mouseMoving = false
+			}
+		}
+
+		wait 0.01
+
+		// 检查是否需要结算得分
+		if slicedFruits > 0 && timer-lastHitTime >= 0.25 {
+			// 距离上次切中超过0.25秒，结算得分
+			addScore := 0
+			if slicedFruits == 1 {
+				addScore = 1
+				play "切西瓜"
+			} else if slicedFruits == 2 {
+				addScore = 3
+				play "连切"
+			} else if slicedFruits == 3 {
+				addScore = 6
+				play "连切"
+			} else if slicedFruits >= 4 {
+				addScore = 10
+				play "连切"
+			}
+
+			score += addScore
+
+			// 广播飘分消息
+			scoreInfo := [lastSliceX, lastSliceY, float64(addScore)]
+			broadcast "showScore", scoreInfo
+
+			println "结算得分 - 本次切中:", slicedFruits, "个水果，得分:", addScore, "总分:", score
+
+			// 重置连击数和最后切中时间
+			slicedFruits = 0
+			lastHitTime = timer
+		}
+	}
+}
+
+onMsg "gameStart", => {
+	// 切换到游戏背景
+	setBackdrop "background"
+	gameStarted = true
+}
+
+onMsg (msg, data) => {
+	if msg == "hit" {
+		if !gameOver {
+			currentTime := timer
+
+			// 记录本次切中
+			slicedFruits++
+			lastHitTime = currentTime
+			pos := data.([]float64)
+			lastSliceX = pos[0]
+			lastSliceY = pos[1]
+
+			println "切中水果，当前连击数:", slicedFruits
+		}
+	} else if msg == "gameOver" {
+		// 游戏结束前，先结算最后一次划动的得分
+		if slicedFruits > 0 {
+			addScore := 0
+			if slicedFruits == 1 {
+				addScore = 1
+			} else if slicedFruits == 2 {
+				addScore = 3
+			} else if slicedFruits == 3 {
+				addScore = 6
+			} else if slicedFruits >= 4 {
+				addScore = 10
+			}
+			score += addScore
+			println "最后一次切中:", slicedFruits, "个水果，得分:", addScore
+		}
+
+		gameOver = true
+		stopPlaying "开始游戏2"
+		println "游戏结束！最终得分：", score
+		wait 2
+		exit
+	}
+}

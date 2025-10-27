@@ -1,0 +1,23 @@
+onStart => {
+	hide
+}
+
+onMsg (msg, data) => {
+	if msg == "sliceApple" {
+		pos := data.([]float64)
+		x := pos[0]
+		y := pos[1]
+
+		setXYpos x, y
+		show
+
+		repeat 10, => {
+			changeXpos -15
+			changeYpos 8
+			turn Left, 30
+			wait 0.05
+		}
+	}
+
+	hide
+}

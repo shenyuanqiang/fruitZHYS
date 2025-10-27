@@ -1,0 +1,49 @@
+var (
+	sliced bool
+)
+
+onStart => {
+	hide
+}
+
+onMsg "gameStart", => {
+	forever => {
+		wait rand(3.0, 6.0)
+		clone
+	}
+}
+
+onCloned => {
+	if gameOver {
+		die
+		return
+	}
+	sliced = false
+	setYpos 180
+	setXpos rand(-200, 200)
+	show
+	glide xpos, -180, 6
+	die
+}
+
+onCloned => {
+	forever => {
+		if gameOver {
+			die
+			return
+		}
+		if !sliced && mouseMoving {
+			dx := mouseX - xpos
+			dy := mouseY - ypos
+			if dx*dx+dy*dy < 2000 {
+				sliced = true
+				broadcast "showKnife", [xpos, ypos]
+				broadcast "hit", [xpos, ypos]
+				broadcast "sliceBanana2", [xpos, ypos]
+				hide
+				die
+			}
+		}
+		wait 0.01
+	}
+}

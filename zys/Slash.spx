@@ -1,0 +1,55 @@
+var (
+	lastX   float64
+	lastY   float64
+	drawing bool
+)
+
+onStart => {
+	hide
+	drawing = false
+	lastX = 0
+	lastY = 0
+	setSize 0.3
+}
+
+onMsg "gameStart", => {
+	wait 0.2
+	forever => {
+		if mousePressed && !gameOver {
+			if !drawing {
+				// 开始绘制
+				drawing = true
+				lastX = mouseX
+				lastY = mouseY
+			} else {
+				// 检测鼠标移动
+				dx := mouseX - lastX
+				dy := mouseY - lastY
+
+				// 如果鼠标移动了，创建残影
+				if dx*dx+dy*dy > 16 {
+					clone
+					lastX = mouseX
+					lastY = mouseY
+				}
+			}
+		} else {
+			// 鼠标松开
+			drawing = false
+		}
+		wait 0.01
+	}
+}
+onCloned => {
+	// 在上次位置显示残影
+	setXYpos lastX, lastY
+	show
+
+	// 残影逐渐变淡效果
+	setGraphicEffect BrightnessEffect, 0
+	repeat 5, => {
+		changeGraphicEffect BrightnessEffect, -20
+		wait 0.02
+	}
+	die
+}

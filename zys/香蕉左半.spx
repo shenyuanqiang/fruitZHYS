@@ -1,0 +1,48 @@
+onStart => {
+	hide
+}
+
+onMsg (msg, data) => {
+	if msg == "sliceBanana2" {
+		pos := data.([]float64)
+		x := pos[0]
+		y := pos[1]
+
+		setXYpos x, y
+		show
+
+		repeat 10, => {
+			changeXpos -15
+			changeYpos 8
+			turn Left, 30
+			wait 0.05
+		}
+	}
+
+	hide
+}
+
+onMsg (msg, data) => {
+	if msg == "sliceBanana" {
+		pos := data.([]float64)
+		x := pos[0]
+		y := pos[1]
+
+		setXYpos x, y
+		show
+
+		// 随机飞出方向
+		dx := rand(-20, -10)
+		dy := rand(5, 15)
+
+		repeat 10, => {
+			changeXpos dx
+			changeYpos dy
+			turn Left, 30
+			changeSize -0.01
+			wait 0.05
+		}
+
+		hide
+	}
+}
