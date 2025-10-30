@@ -37,12 +37,7 @@ onCloned => {
 
 	show
 
-	// 等待掉出屏幕
-	waitUntil ypos < -200
-	die
-}
-
-onCloned => {
+	// 碰撞检测循环
 	forever => {
 		if gameOver {
 			die
@@ -60,6 +55,12 @@ onCloned => {
 				die
 			}
 		}
+
+		// 检查是否掉出屏幕
+		if ypos < -200 {
+			die
+		}
+
 		wait 0.01
 	}
 }
