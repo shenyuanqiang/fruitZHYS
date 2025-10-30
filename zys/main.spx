@@ -150,8 +150,8 @@ onMsg (msg, data) => {
 		// 重置计时器
 		resetTimer
 
-		// 切换回开始背景
-		setBackdrop "背景图2"
+		// 切换回游戏背景
+		setBackdrop "background"
 
 		// 重新播放背景音乐
 		play "开始游戏2", true
