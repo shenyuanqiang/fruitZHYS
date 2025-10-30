@@ -7,3 +7,6 @@ onMsg "gameOver", => {
 	setXYpos 0, 0
 	setSize 0.3
 }
+onMsg "restartGame", => {
+	hide
+}

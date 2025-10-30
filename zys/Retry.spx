@@ -1,0 +1,16 @@
+onStart => {
+	hide
+}
+
+onMsg "gameOver", => {
+	// 游戏结束时显示 Retry 按钮
+	setXYpos 165, 5
+	setSize 0.18
+	show
+}
+
+onClick => {
+	// 点击后隐藏并重新开始游戏
+	hide
+	broadcast "restartGame"
+}
