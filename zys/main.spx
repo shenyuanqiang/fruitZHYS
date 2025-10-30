@@ -132,7 +132,30 @@ onMsg (msg, data) => {
 		gameOver = true
 		stopPlaying "开始游戏2"
 		println "游戏结束！最终得分：", score
-		wait 2
-		exit
+
+		// 不再直接退出，而是等待玩家点击 Retry 按钮
+	} else if msg == "restartGame" {
+		// 重新开始游戏
+		score = 0
+		gameOver = false
+		gameStarted = false
+		slicedFruits = 0
+		lastHitTime = -1
+		lastSliceX = 0
+		lastSliceY = 0
+		mouseMoving = false
+		lastMouseX = mouseX
+		lastMouseY = mouseY
+
+		// 重置计时器
+		resetTimer
+
+		// 切换回开始背景
+		setBackdrop "背景图2"
+
+		// 重新播放背景音乐
+		play "开始游戏2", true
+
+		println "游戏重新开始！"
 	}
 }
