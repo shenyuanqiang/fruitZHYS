@@ -31,7 +31,7 @@ HackathonZYS
 
 游戏地址：https://x.qiniu.com/project/wx_user_DRrxU7dM/zys
 
-视频地址：https://www.bilibili.com/video/BV1hjszzGEKY/?vd_source=5412d8e69ef719839450d5ddbd65db34
+视频地址：https://www.bilibili.com/video/BV13fyhBJEwP/?vd_source=799658ca7f0a7bf27c9c4cdbb109ef1a
 
 操作说明
 每个水果都价值1分，单次划到的水果数量越多，得分越高：划到1水果得1分，2水果得3分，3水果得6分，4水果得10分
